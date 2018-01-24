@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{#<link rel="stylesheet" href="{{ asset('css/style.css') }}" />#}
+{#<script src="http://www.chilipeppr.com/js/require.js" > </script>#}
+<button id="start" type="submit">Pradėti matavimą</button>
+<progress value="0" max="30" id="progressBar"></progress>
+<button id="button" type="submit">Siųsti surinktus duomenis apdorojimui</button>
+<div id="result"></div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-simple-websocket@1.1.4/src/jquery.simple.websocket.min.js"></script>
+<script type="text/javascript">
+    var completeData = [];
+
+    $( "#start" ).click(function() {
+        var ws = new WebSocket('ws://localhost:8989/ws');
+        ws.onopen = function() {
+            ws.send('open COM6 9600');
+        };
+    var timeleft = 30;
+    var downloadTimer = setInterval(function(){
+        document.getElementById("progressBar").value = 30 - --timeleft;
+        if(timeleft <= 0) {
+            clearInterval(downloadTimer);
+            ws.send('close COM6');
+        }
+    },1000);
+
+
+
+
+    var socket = $.simpleWebSocket(
+        {
+            url: 'ws://localhost:8989/ws',
+            timeout: 2000000, // optional, default timeout between connection attempts
+            attempts: 60, // optional, default attempts until closing connection
+            dataType: 'json' // optional (xml, json, text), default json
+        }
+    );
+
+    socket.connect();
+
+    socket.isConnected(); // or: socket.isConnected(function(connected) {});
+
+
+    socket.listen(function(data) {
+        console.log(data.D);
+        completeData.push(data.D);
+        });
+    });
+
+    $( "#button" ).click(function() {
+        console.log(completeData);
+        request = $.ajax({
+            url: "{{ (path('calculate_emotion')) }}",
+            type: "post",
+            data: {'emg' : completeData}
+        }).done(function(data) {
+            $('result' ).prepend($('<img >',{id:'theImg', src: data + '.png'}));
+        });
+
+        completeData = [];
+    });
+
+</script>

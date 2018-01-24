@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <ul>
+    {% for emotion in emotions %}
+        <li>{{ emotion.emotion }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

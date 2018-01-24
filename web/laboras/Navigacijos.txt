@@ -1,0 +1,4 @@
+Temtem;dsa55;4;130
+Sony;aaa89;6;150
+samsung;ddd87;10;160
+Philips;aaa785;14;150
