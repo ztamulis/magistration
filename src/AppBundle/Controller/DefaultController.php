@@ -45,6 +45,7 @@ class DefaultController extends Controller
      */
     public function postEmgData(Request $request)
     {
+//        var_dump($request->request->get('emg'));
         if($request->request->get('emg')){
             $arrData = array_filter($request->request->get('emg'));
             //make something curious, get some unbelieveable data

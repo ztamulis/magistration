@@ -20,7 +20,7 @@
         document.getElementById("progressBar").value = 30 - --timeleft;
         if(timeleft <= 0) {
             clearInterval(downloadTimer);
-            ws.send('close COM6');
+//            ws.send('close COM6');
         }
     },1000);
 
@@ -42,18 +42,19 @@
 
 
     socket.listen(function(data) {
-        console.log(data.D);
+//        console.log(data.D);
         completeData.push(data.D);
         });
     });
-
+//    console.log(data);
     $( "#button" ).click(function() {
-        console.log(completeData);
+//        console.log(completeData);
         request = $.ajax({
             url: "{{ (path('calculate_emotion')) }}",
             type: "post",
             data: {'emg' : completeData}
         }).done(function(data) {
+//            console.log(data);
             $('result' ).prepend($('<img >',{id:'theImg', src: data + '.png'}));
         });
 
